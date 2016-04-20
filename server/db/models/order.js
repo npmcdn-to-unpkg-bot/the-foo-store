@@ -9,7 +9,8 @@ var lineItemSchema = mongoose.Schema({
 
 var schema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  lineItems: [ lineItemSchema ]
+  lineItems: [ lineItemSchema ],
+  status: { type: String, default: 'CART' }
 });
 
 schema.pre('save', function(next){

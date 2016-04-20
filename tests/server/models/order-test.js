@@ -66,6 +66,10 @@ describe('Order model', function () {
         expect(order.user.email).to.equal('moe@example.com');
       });
 
+      it('order has a default status of CART', function(){
+        expect(order.status).to.equal('CART');
+      });
+
       it('line items are combined', function(){
         expect(order.lineItems.length).to.eql(1);
       });
@@ -80,6 +84,12 @@ describe('Order model', function () {
 
       it('line items are consolidated', function(){
         expect(order.lineItems[0].quantity).to.equal(6);
+      });
+
+      describe('creating an order', function(){
+        it('changes status to order', function(){
+          expect(order.status).to.equal('ORDER');
+        });
       });
 
     });

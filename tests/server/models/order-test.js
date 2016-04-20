@@ -45,6 +45,7 @@ describe('Order model', function () {
             return Order.create({
               user: user._id,
               lineItems: [
+                { product: product._id, quantity: 3 },
                 { product: product._id, quantity: 3 }
               ]
             });
@@ -57,7 +58,7 @@ describe('Order model', function () {
           .then(function(_order){
             order = _order;
             done();
-          }, done)
+          }, done);
       
       });
 
@@ -69,8 +70,12 @@ describe('Order model', function () {
         expect(order.lineItems.length).to.eql(1);
       });
 
-      it('line item is foo', function(){
+      it('line item product name is foo', function(){
         expect(order.lineItems[0].product.name).to.equal('foo');
+      });
+
+      it('line item price ', function(){
+        expect(order.lineItems[0].price).to.equal(3);
       });
 
     });

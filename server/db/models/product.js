@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
   name: String,
-  price: Number
+  price: { type: Number, default: 0 }
 });
 
 

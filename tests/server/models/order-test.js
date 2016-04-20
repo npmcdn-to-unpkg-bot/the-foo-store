@@ -52,19 +52,7 @@ describe('Order model', function () {
           .then(function(order){
             return Order
               .findById(order._id)
-              .populate([
-                  {
-                    path: 'user'
-                  },
-                  { 
-                    path: 'lineItems',
-                    populate: {
-                      path: 'product',
-                      model: Product 
-                    } 
-                  }
-              ])
-              //.populate('lineItems.product');
+              .populate(['user', 'lineItems.product'])
           })
           .then(function(_order){
             order = _order;

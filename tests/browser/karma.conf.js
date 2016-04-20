@@ -30,6 +30,7 @@ module.exports = function (config) {
         preprocessors: {
             'public/main.js': 'coverage'
         },
+        singleRun: true,
         coverageReporter: {
             dir: 'coverage/browser/',
             reporters: [{

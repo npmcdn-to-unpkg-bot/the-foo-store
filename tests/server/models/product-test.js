@@ -43,6 +43,10 @@ describe('Product model', function () {
         expect(product.price).to.equal(2.99);
       });
 
+      it('has a quantity is 5', function(){
+        expect(product.quantity).to.equal(5);
+      });
+
     });
 
 

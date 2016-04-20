@@ -3,8 +3,8 @@ var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
   name: String,
-  price: Number,
-  quantity: { type: Number, default: 5 }
+  quantity: { type: Number, default: 5 },
+  price: { type: Number, default: 0 }
 });
 
 

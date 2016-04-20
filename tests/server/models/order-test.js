@@ -62,20 +62,24 @@ describe('Order model', function () {
       
       });
 
-      it('has a valid user', function(){
+      it('order has a user', function(){
         expect(order.user.email).to.equal('moe@example.com');
       });
 
-      it('has one line items', function(){
+      it('line items are combined', function(){
         expect(order.lineItems.length).to.eql(1);
       });
 
-      it('line item product name is foo', function(){
+      it('line item product has the correct name', function(){
         expect(order.lineItems[0].product.name).to.equal('foo');
       });
 
-      it('line item price ', function(){
+      it('line item has the correct price', function(){
         expect(order.lineItems[0].price).to.equal(3);
+      });
+
+      it('line items are consolidated', function(){
+        expect(order.lineItems[0].quantity).to.equal(6);
       });
 
     });

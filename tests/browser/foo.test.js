@@ -10,6 +10,7 @@ describe('foo', function(){
 
   it('works', function(){
     expect(1 + 1).to.equal(2);
+    expect($httpBackend).to.be.ok;
   
   });
 });

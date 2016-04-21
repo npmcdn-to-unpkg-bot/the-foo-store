@@ -102,6 +102,35 @@ describe('Order model', function () {
         it('we have an order date', function(){
           expect(order.orderDate).to.be.ok;
         });
+
+        describe('Order#getCart', function(){
+          beforeEach(function(done){
+            Order.getCart(user)
+              .then(function(_order){
+                order = _order;
+                done();
+              });
+          });
+          it('creates a cart if one does not exist', function(){
+            expect(order.status).to.equal('CART');
+            expect(order.orderDate).not.to.be.ok;
+          });
+
+          describe('a cart exists', function(){
+            var cart;
+            beforeEach(function(done){
+              Order.getCart(user)
+                .then(function(_cart){
+                  cart = _cart;
+                  done();
+                });
+            });
+            it('the cart will be returned', function(){
+              expect(cart.status).to.equal('CART');
+              expect(cart.id).to.equal(order.id);
+            });
+          });
+        });
       });
 
     });

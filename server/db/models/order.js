@@ -8,11 +8,22 @@ var lineItemSchema = mongoose.Schema({
 });
 
 var schema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   lineItems: [ lineItemSchema ],
   status: { type: String, default: 'CART' },
   orderDate: Date
 });
+
+schema.statics.getCart = function(user){
+  var that = this;
+  return this.findOne({ user: user, status: 'CART' })
+    .then(function(cart){
+      if(cart)
+        return cart;
+      return that.create({ user: user, status: 'CART'}); 
+    
+    });
+};
 
 schema.methods.createOrder = function(){
   this.status = 'ORDER';

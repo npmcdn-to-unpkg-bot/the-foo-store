@@ -10,8 +10,15 @@ var lineItemSchema = mongoose.Schema({
 var schema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   lineItems: [ lineItemSchema ],
-  status: { type: String, default: 'CART' }
+  status: { type: String, default: 'CART' },
+  orderDate: Date
 });
+
+schema.methods.createOrder = function(){
+  this.status = 'ORDER';
+  this.orderDate = new Date();
+  return this.save();
+}
 
 schema.pre('save', function(next){
   var promises = [];

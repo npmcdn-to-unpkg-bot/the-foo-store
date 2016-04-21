@@ -87,8 +87,20 @@ describe('Order model', function () {
       });
 
       describe('creating an order', function(){
+        beforeEach(function(done){
+          order.createOrder()
+            .then(function(_order){
+              order = _order;
+              done();
+            });
+        });
+
         it('changes status to order', function(){
           expect(order.status).to.equal('ORDER');
+        });
+
+        it('we have an order date', function(){
+          expect(order.orderDate).to.be.ok;
         });
       });
 

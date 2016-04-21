@@ -25,7 +25,7 @@ describe('Orders Route', function () {
 		clearDB(done);
 	});
 
-	describe('Authenticated request', function () {
+	describe('As an authorized user', function () {
     var product;
 
 
@@ -52,35 +52,77 @@ describe('Orders Route', function () {
 			User.create(userInfo, done);
 		});
 
-		beforeEach('Create loggedIn user agent and authenticate', function () {
-		});
+    describe('creating a cart and adding items and checking out', function(){
 
-		it('should get with 200 response and with an array as the body', function () {
-      var cart, cookie;
-			return request
-        .post('/login')
-        .send(userInfo)
-        .then(function(resp){
-          cookie = resp.headers['set-cookie'][0];
-          return request.post('/api/orders')
-            .set('cookie', cookie);
-        })
-        .then(function (response) {
-          expect(response.status).to.equal(200);
-				  expect(response.body.lineItems).to.eql([]);
-          return response.body
-			  })
-        .then(function (cart) {
-          cart.lineItems.push({ product: product, quantity: 3 });
-          return request.put('/api/orders/' + cart._id)
-            .set('cookie', cookie)
-            .send(cart);
-			  })
-        .then(function (resp) {
-          expect(resp.status).to.equal(200);
-          expect(resp.body.lineItems.length).to.equal(1);
-			  })
-		});
+      it('will create an order', function () {
+        var cart, cookie;
+        return request
+          .post('/login')
+          .send(userInfo)
+          .then(function(resp){
+            cookie = resp.headers['set-cookie'][0];
+            return request.post('/api/orders')
+              .set('cookie', cookie);
+          })
+          .then(function (response) {
+            expect(response.status).to.equal(200);
+            expect(response.body.lineItems).to.eql([]);
+            expect(response.body.orderDate).not.to.be.ok;
+            return response.body
+          })
+          .then(function (cart) {
+            cart.lineItems.push({ product: product, quantity: 3 });
+            cart.lineItems.push({ product: product, quantity: 3 });
+            return request.put('/api/orders/' + cart._id)
+              .set('cookie', cookie)
+              .send(cart);
+          })
+          .then(function (resp) {
+            cart = resp.body;
+            cart.lineItems.push({ product: product, quantity: 3 });
+            cart.status = 'ORDER';
+            return request.put('/api/orders/' + cart._id)
+              .set('cookie', cookie)
+              .send(cart);
+          })
+          .then(function (resp) {
+            expect(resp.body.orderDate).to.be.ok;
+            expect(resp.body.lineItems[0].quantity).to.equal(6);
+          });
+      });
+    });
+
+    describe('creating a cart and adding items', function(){
+
+      it('return a cart', function () {
+        var cart, cookie;
+        return request
+          .post('/login')
+          .send(userInfo)
+          .then(function(resp){
+            cookie = resp.headers['set-cookie'][0];
+            return request.post('/api/orders')
+              .set('cookie', cookie);
+          })
+          .then(function (response) {
+            expect(response.status).to.equal(200);
+            expect(response.body.lineItems).to.eql([]);
+            return response.body;
+          })
+          .then(function (cart) {
+            cart.lineItems.push({ product: product, quantity: 3 });
+            cart.lineItems.push({ product: product, quantity: 3 });
+            return request.put('/api/orders/' + cart._id)
+              .set('cookie', cookie)
+              .send(cart);
+          })
+          .then(function (resp) {
+            expect(resp.status).to.equal(200);
+            expect(resp.body.lineItems.length).to.equal(1);
+            expect(resp.body.lineItems[0].quantity).to.equal(6);
+          });
+      });
+    });
 
 	});
 

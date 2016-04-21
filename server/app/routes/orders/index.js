@@ -22,6 +22,8 @@ router.post('/', ensureAuthenticated, function (req, res) {
 router.put('/:id', ensureAuthenticated, function (req, res, next) {
   Order.getCart(req.user)
     .then(function(cart){
+      if(cart.status === 'CART' && req.body.status === 'ORDER')
+        return cart.createOrder();
       cart.lineItems = req.body.lineItems;
       return cart.save();
     })

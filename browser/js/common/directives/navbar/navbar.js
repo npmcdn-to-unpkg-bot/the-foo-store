@@ -12,7 +12,8 @@ app.directive('navbar', function (OrderFactory, $rootScope, AuthService, AUTH_EV
                 { label: 'Home', state: 'home' },
                 { label: 'About', state: 'about' },
                 { label: 'Documentation', state: 'docs' },
-                { label: 'Members Only', state: 'membersOnly', auth: true }
+                { label: 'Members Only', state: 'membersOnly', auth: true },
+                { label: 'Products', state: 'products', auth: true }
             ];
 
             scope.user = null;

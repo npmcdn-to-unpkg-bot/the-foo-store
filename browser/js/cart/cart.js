@@ -3,7 +3,6 @@ app.factory('Cart', function(){
     if(data){
       this._id = data._id;
     }
-  
   }
 
   Cart.prototype.getItemCount = function(){

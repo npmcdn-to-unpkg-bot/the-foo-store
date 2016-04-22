@@ -10,7 +10,10 @@ module.exports = function (config) {
         'node_modules/angular-ui-bootstrap/ui-bootstrap.js',
         'node_modules/angular-ui-bootstrap/ui-bootstrap-tpls.js',
         'node_modules/socket.io-client/socket.io.js',
-        'public/main.js',
+        'browser/js/fsa/fsa-pre-built.js',
+        'tests/browser/bootstrap.js',
+        'browser/js/app.js',
+        'browser/js/**/*.js',
         'node_modules/sinon/pkg/sinon.js',
         'node_modules/angular-mocks/angular-mocks.js',
         'tests/browser/**/*.js'

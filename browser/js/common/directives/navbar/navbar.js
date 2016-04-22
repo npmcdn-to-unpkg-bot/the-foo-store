@@ -1,10 +1,12 @@
-app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state) {
+app.directive('navbar', function (OrderFactory, $rootScope, AuthService, AUTH_EVENTS, $state) {
 
     return {
         restrict: 'E',
-        scope: {},
+        scope: {
+        },
         templateUrl: 'js/common/directives/navbar/navbar.html',
         link: function (scope) {
+            scope.cart = OrderFactory.getCart();
 
             scope.items = [
                 { label: 'Home', state: 'home' },

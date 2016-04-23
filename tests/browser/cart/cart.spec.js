@@ -13,9 +13,10 @@ describe('CartService', function(){
       cart = CartService.getCart();
     });
 
-    it('the cart starts out as undefined', function(){
+    it('the item count is zero', function(){
       expect(cart).not.to.be.ok;
       expect(CartService.itemCount()).not.to.be.ok;
+      expect(CartService.total()).not.to.be.ok;
     });
   });
 
@@ -24,8 +25,8 @@ describe('CartService', function(){
     beforeEach(function(){
       CartService.loadCart = function(){
         return $q.when({ lineItems: [
-          { product: { _id: 3 }, quantity: 5 },
-          { product: {_id: 5 }, quantity: 3 },
+          { product: { _id: 3, price: 2 }, quantity: 5 },
+          { product: {_id: 5, price: 8 }, quantity: 3 },
         
         ]});
       };
@@ -37,6 +38,7 @@ describe('CartService', function(){
     it('the cart starts out as undefined', function(){
       expect(cart).to.be.ok;
       expect(CartService.itemCount()).to.equal(8);
+      expect(CartService.total()).to.equal(34);
     });
   });
 

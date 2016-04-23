@@ -11,6 +11,13 @@ app.factory('CartService', function($http){
           return response.data;
         });
     },
+    total: function(){
+      if(!!_cart)
+        return _cart.lineItems.reduce(function(memo, lineItem){
+          memo += lineItem.quantity * lineItem.product.price;
+          return memo;
+        }, 0); 
+    },
     itemCount: function(){
       if(!!_cart)
         return _cart.lineItems.reduce(function(memo, lineItem){

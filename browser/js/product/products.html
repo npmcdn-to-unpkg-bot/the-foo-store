@@ -3,5 +3,6 @@
     <td>{{ product.name }}</td>
     <td>{{ product.price | currency }}</td>
     <td><button class='btn btn-primary' ng-click='addToCart(product)'>Add to Cart</button></td>
+    <td><button class='btn btn-danger' ng-click='removeFromCart(product)'>Remove From Cart</button></td>
   </tr>
 </table>

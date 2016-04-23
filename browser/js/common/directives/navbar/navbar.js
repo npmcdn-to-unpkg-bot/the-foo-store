@@ -1,4 +1,4 @@
-app.directive('navbar', function (OrderFactory, $rootScope, AuthService, AUTH_EVENTS, $state) {
+app.directive('navbar', function (CartService, $rootScope, AuthService, AUTH_EVENTS, $state) {
 
     return {
         restrict: 'E',
@@ -6,7 +6,11 @@ app.directive('navbar', function (OrderFactory, $rootScope, AuthService, AUTH_EV
         },
         templateUrl: 'js/common/directives/navbar/navbar.html',
         link: function (scope) {
-            scope.cart = OrderFactory.getCart();
+            scope.getItemCount = function(){
+              var count = CartService.itemCount();
+              console.log(count);
+              return count;
+            }
 
             scope.items = [
                 { label: 'Home', state: 'home' },

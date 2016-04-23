@@ -16,6 +16,7 @@ var schema = new mongoose.Schema({
 schema.statics.getCart = function(user){
   var that = this;
   return this.findOne({ user: user, status: 'CART' })
+    .populate('lineItems.product')
     .then(function(cart){
       if(cart)
         return cart;

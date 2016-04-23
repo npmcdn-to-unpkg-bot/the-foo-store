@@ -1,5 +1,7 @@
 app.run(function(CartService, $rootScope, AUTH_EVENTS){
-  $rootScope.$on(AUTH_EVENTS.loginSuccess, CartService.init);
+  $rootScope.$on(AUTH_EVENTS.loginSuccess, function(){
+    CartService.init();
+  });
 });
 
 app.factory('CartService', function($http){

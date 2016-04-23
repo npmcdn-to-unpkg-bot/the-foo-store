@@ -45,7 +45,6 @@ describe('Order model', function () {
             return Order.create({
               user: user._id,
               lineItems: [
-                { product: product._id, quantity: 3 },
                 { product: product._id, quantity: 3 }
               ]
             });
@@ -78,13 +77,6 @@ describe('Order model', function () {
         expect(order.lineItems[0].product.name).to.equal('foo');
       });
 
-      it('line item has the correct price', function(){
-        expect(order.lineItems[0].price).to.equal(3);
-      });
-
-      it('line items are consolidated', function(){
-        expect(order.lineItems[0].quantity).to.equal(6);
-      });
 
       describe('creating an order', function(){
         beforeEach(function(done){

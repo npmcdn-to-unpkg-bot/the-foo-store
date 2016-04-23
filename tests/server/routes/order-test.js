@@ -68,10 +68,9 @@ describe('Orders Route', function () {
             expect(response.status).to.equal(200);
             expect(response.body.lineItems).to.eql([]);
             expect(response.body.orderDate).not.to.be.ok;
-            return response.body
+            return response.body;
           })
           .then(function (cart) {
-            cart.lineItems.push({ product: product, quantity: 3 });
             cart.lineItems.push({ product: product, quantity: 3 });
             return request.put('/api/orders/' + cart._id)
               .set('cookie', cookie)
@@ -87,7 +86,7 @@ describe('Orders Route', function () {
           })
           .then(function (resp) {
             expect(resp.body.orderDate).to.be.ok;
-            expect(resp.body.lineItems[0].quantity).to.equal(6);
+            expect(resp.body.lineItems[0].quantity).to.equal(3);
           });
       });
     });
@@ -111,7 +110,6 @@ describe('Orders Route', function () {
           })
           .then(function (cart) {
             cart.lineItems.push({ product: product, quantity: 3 });
-            cart.lineItems.push({ product: product, quantity: 3 });
             return request.put('/api/orders/' + cart._id)
               .set('cookie', cookie)
               .send(cart);
@@ -119,7 +117,7 @@ describe('Orders Route', function () {
           .then(function (resp) {
             expect(resp.status).to.equal(200);
             expect(resp.body.lineItems.length).to.equal(1);
-            expect(resp.body.lineItems[0].quantity).to.equal(6);
+            expect(resp.body.lineItems[0].quantity).to.equal(3);
           });
       });
     });

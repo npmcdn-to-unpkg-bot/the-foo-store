@@ -25,6 +25,19 @@ app.factory('CartService', function($http){
           return memo;
         }, 0); 
     },
+    removeProduct: function(product){
+      var cartCopy = angular.copy(this.getCart());
+      var index;
+      cartCopy.lineItems.forEach(function(lineItem, idx){
+        if(lineItem.product._id === product._id)
+          index = idx;
+      });
+      cartCopy.lineItems.splice(index, 1);
+      return $http.put('/api/orders/' + cartCopy._id, cartCopy)
+        .then(function(response){
+          _cart = response.data;
+        });
+    },
     addProduct: function(product){
       var cartCopy = angular.copy(this.getCart());
       var products = cartCopy.lineItems.filter(function(lineItem){

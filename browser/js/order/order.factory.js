@@ -18,6 +18,14 @@ app.factory('OrderFactory', function ($http, Cart, $rootScope, AUTH_EVENTS) {
           angular.copy(new Cart(response.data), cart);
           return that.getCart();
         });
+    },
+    updateCart: function(){
+      var that = this;
+      return $http.put('/api/orders/' + cart._id, {lineItems: cart.lineItems})
+        .then(function(response){
+          angular.copy(new Cart(response.data), cart);
+          return that.getCart();
+        });
     }
   };
 });

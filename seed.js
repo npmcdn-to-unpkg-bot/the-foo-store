@@ -23,13 +23,16 @@ var chalk = require('chalk');
 var connectToDb = require('./server/db');
 var User = mongoose.model('User');
 var Product = mongoose.model('Product');
+var Order = mongoose.model('Order');
 
 var wipeCollections = function () {
     var removeUsers = User.remove({});
+    var removeOrders = Order.remove({});
     var removeProducts = Product.remove({});
     return Promise.all([
         removeUsers,
-        removeProducts
+        removeProducts,
+        removeOrders
     ]);
 };
 

@@ -40,6 +40,13 @@ app.factory('CartService', function($http){
           _cart = response.data;
         });
     },
+    hasProduct: function(product){
+      if(!!_cart)
+        return _cart.lineItems.filter(function(lineItem){
+        return lineItem.product._id === product._id;
+      }).length > 0;
+    
+    },
     addProduct: function(product){
       var cartCopy = angular.copy(this.getCart());
       var products = cartCopy.lineItems.filter(function(lineItem){

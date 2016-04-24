@@ -5,7 +5,9 @@
   "main": "server/start.js",
   "scripts": {
     "pretest": "gulp buildJS",
-    "test": "./node_modules/.bin/karma start tests/browser/karma.conf.js",
+    "test:server": "./node_modules/.bin/mocha tests/server/**/*.js",
+    "test:browser" : "./node_modules/.bin/karma start tests/browser/karma.conf.js",
+    "test": "npm run test:browser && npm run test:server",
     "start": "nodemon --watch server -e js,html server/start.js",
     "postinstall": "gulp build",
     "test:server:dev": "nodemon ./node_modules/.bin/mocha tests/server/**/*.js",

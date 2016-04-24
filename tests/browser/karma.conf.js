@@ -1,9 +1,6 @@
 var path = require('path');
 var argv = require('yargs').argv;
 
-if(argv.grep)
-  console.log('TODO filter on file', argv.grep);
-
 module.exports = function (config) {
 
     var filesCollection = [

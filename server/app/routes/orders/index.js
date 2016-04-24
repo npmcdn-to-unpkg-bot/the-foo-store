@@ -12,6 +12,13 @@ var ensureAuthenticated = function (req, res, next) {
     }
 };
 
+router.get('/', ensureAuthenticated, function (req, res) {
+  Order.find({ user: req.user._id})
+    .then(function(orders){
+      res.send(orders);
+    });
+});
+
 router.post('/', ensureAuthenticated, function (req, res) {
   Order.getCart(req.user)
     .then(function(cart){

@@ -87,6 +87,12 @@ describe('Orders Route', function () {
           .then(function (resp) {
             expect(resp.body.orderDate).to.be.ok;
             expect(resp.body.lineItems[0].quantity).to.equal(3);
+            return request.get('/api/orders/')
+              .set('cookie', cookie)
+          })
+          .then(function (resp) {
+            expect(resp.body.length).to.equal(1);
+            expect(resp.body[0].status).to.equal('ORDER'); 
           });
       });
     });

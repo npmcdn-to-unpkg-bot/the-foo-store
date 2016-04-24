@@ -63,6 +63,10 @@ var seedProducts = function () {
         {
           name: 'Bar',
           price: 9
+        },
+        {
+          name: 'Buzz',
+          price: 8
         }
     ];
 

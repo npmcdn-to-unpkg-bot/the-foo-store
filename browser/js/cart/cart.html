@@ -1,0 +1,20 @@
+<table class='table'>
+  <thead>
+    <th>Name</th>
+    <th>Quantity</th>
+    <th></th>
+  </thead>
+  <tbody>
+    <tr ng-repeat='lineItem in cart().lineItems'>
+      <td>
+        {{ lineItem.product.name }}
+      </td>
+      <td>
+        {{ lineItem.quantity }}
+      </td>
+      <td>
+        <button class='btn btn-danger' ng-click='remove(lineItem.product)'>Remove</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

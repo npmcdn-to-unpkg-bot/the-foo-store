@@ -24,9 +24,14 @@ describe('cartStatus directive', function(){
   describe('the cart is defined', function(){
     var html, $scope;
     beforeEach(function(){
+      var cart = {};
       CartService.itemCount = function(){
         return 10;
       };
+
+      CartService.getCart = function(){
+        return cart;
+      }
       $scope = $rootScope.$new();
       var elem = $compile('<cart-status></cart-status')($scope);
       $scope.$digest();

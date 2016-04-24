@@ -14,8 +14,6 @@ app.directive('navbar', function (CartService, $rootScope, AuthService, AUTH_EVE
             scope.items = [
                 { label: 'Home', state: 'home' },
                 { label: 'About', state: 'about' },
-                { label: 'Documentation', state: 'docs' },
-                { label: 'Members Only', state: 'membersOnly', auth: true },
                 { label: 'Products', state: 'products', auth: true }
             ];
 

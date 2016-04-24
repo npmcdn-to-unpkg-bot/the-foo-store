@@ -61,6 +61,14 @@ app.factory('CartService', function($http){
           _cart = response.data;
         });
     },
+    checkout: function(){
+      _cart.status = 'ORDER';
+      var that = this;
+      return $http.put('/api/orders/' + _cart._id, _cart)
+        .then(function(response){
+          that.init();
+        });
+    },
     getCart: function(){
       return _cart;
     },

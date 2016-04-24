@@ -7,6 +7,9 @@ app.config(function($stateProvider){
         $scope.cart = CartService.getCart;
         $scope.remove = function(product){
           CartService.removeProduct(product);
+        };
+        $scope.checkout = function(){
+          CartService.checkout();
         }
       }
     });

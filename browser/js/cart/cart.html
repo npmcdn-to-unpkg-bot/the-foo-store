@@ -1,4 +1,5 @@
-<table class='table'>
+<div class='alert alert-info' ng-if='cart().lineItems.length === 0'>Your cart is empty.</div>
+<table class='table' ng-if='cart().lineItems.length !== 0'>
   <thead>
     <th>Name</th>
     <th>Quantity</th>
@@ -18,3 +19,4 @@
     </tr>
   </tbody>
 </table>
+<button class='btn btn-primary' ng-click='checkout()' ng-if='cart().lineItems.length > 0'>Checkout</button>

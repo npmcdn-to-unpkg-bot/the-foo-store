@@ -9,7 +9,7 @@ describe('CartService', function(){
   }));
   
   describe('before cart is initiated', function(){
-    var cart, itemCount;
+    var cart;
     beforeEach(function(){
       cart = CartService.getCart();
     });
@@ -18,6 +18,25 @@ describe('CartService', function(){
       expect(cart).not.to.be.ok;
       expect(CartService.itemCount()).not.to.be.ok;
       expect(CartService.total()).not.to.be.ok;
+    });
+  });
+
+  describe('checkout out a cart', function(){
+    var cart = {_id: 3, lineItems: [ {} ]};
+
+    it('makes an api call with the correct status', function(){
+      CartService.loadCart = function(){
+        return $q.when(cart);
+      };
+      CartService.init();
+      $rootScope.$digest();
+      var expectedPayload = {"_id":3,"lineItems":[{}],"status":"ORDER"}; 
+      $httpBackend.expectPUT('/api/orders/3', expectedPayload).respond({});
+      CartService.checkout();
+      var spy = sinon.spy(CartService, 'init');
+      //check that init was called?
+      $httpBackend.flush();
+      expect(spy.called).to.be.ok;
     });
   });
 

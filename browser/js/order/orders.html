@@ -1,0 +1,15 @@
+<table class='table'>
+  <tr ng-repeat='order in orders'>
+    <td>{{ order._id }}</td>
+    <td>{{ order.orderDate | date }}</td>
+    <td>
+      <ul class='list-group'>
+        <li ng-repeat='lineItem in order.lineItems' class='list-group-item'>
+          {{ lineItem.product.name }} 
+          : 
+          {{ lineItem.quantity }} x {{ lineItem.product.price | currency }} per item = {{ lineItem.quantity * lineItem.product.price | currency }}  
+        </li>
+      </ul>
+      </td>
+  </tr>
+</table>

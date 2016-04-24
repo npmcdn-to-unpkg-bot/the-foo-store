@@ -13,7 +13,8 @@ var ensureAuthenticated = function (req, res, next) {
 };
 
 router.get('/', ensureAuthenticated, function (req, res) {
-  Order.find({ user: req.user._id})
+  Order.find({ user: req.user._id, status: 'ORDER' })
+    .populate('lineItems.product')
     .then(function(orders){
       res.send(orders);
     });

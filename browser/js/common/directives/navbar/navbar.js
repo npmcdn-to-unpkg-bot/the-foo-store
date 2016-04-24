@@ -8,9 +8,8 @@ app.directive('navbar', function (CartService, $rootScope, AuthService, AUTH_EVE
         link: function (scope) {
             scope.getItemCount = function(){
               var count = CartService.itemCount();
-              console.log(count);
               return count;
-            }
+            };
 
             scope.items = [
                 { label: 'Home', state: 'home' },

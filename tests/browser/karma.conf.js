@@ -1,4 +1,8 @@
 var path = require('path');
+var argv = require('yargs').argv;
+
+if(argv.grep)
+  console.log('TODO filter on file', argv.grep);
 
 module.exports = function (config) {
 
@@ -11,12 +15,12 @@ module.exports = function (config) {
         'node_modules/angular-ui-bootstrap/ui-bootstrap-tpls.js',
         'node_modules/socket.io-client/socket.io.js',
         'browser/js/fsa/fsa-pre-built.js',
-        'tests/browser/bootstrap.js',
+        'tests/browser/fix.js',
         'browser/js/app.js',
         'browser/js/**/*.js',
         'node_modules/sinon/pkg/sinon.js',
         'node_modules/angular-mocks/angular-mocks.js',
-        'tests/browser/**/*.js'
+        argv.grep ? 'tests/browser/**/*' + argv.grep +'*.js' : 'tests/browser/**/*.js' 
     ];
 
     var excludeFiles = [

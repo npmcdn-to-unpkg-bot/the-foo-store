@@ -10,6 +10,7 @@
         </ul>
         <button ng-show="!user" ui-sref="login" class="btn login-button">Login</button>
         <div ng-show="user" class="welcome">
+          <cart-status></cart-status>
           <span>Welcome, {{ user.email }}! {{ getItemCount() }}</span>
             <a ng-click="logout()">Logout</a>
         </div>

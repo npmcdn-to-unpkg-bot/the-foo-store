@@ -8,6 +8,7 @@
           {{ lineItem.product.name }} 
           : 
           {{ lineItem.quantity }} x {{ lineItem.product.price | currency }} per item = {{ lineItem.quantity * lineItem.product.price | currency }}  
+          <span class='label label-warning' ng-if='!getReview( lineItem.product )'>TODO rate the product</span>
           <span class='label label-default'>{{ getReview( lineItem.product ).rating}}</span>
         </li>
       </ul>

@@ -60,10 +60,11 @@ describe('Product model', function () {
               password: 'foobar'
             })
             .then(function(user){
-              product.reviews.push({
+              review = {
                 rating: 3,
                 user: user
-              });
+              };
+              return product.addReview(review);
             })
             .then(function(){
               return product.save()

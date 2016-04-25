@@ -15,5 +15,10 @@ var schema = new mongoose.Schema({
   reviews: [ reviewSchema ]
 });
 
+schema.methods.addReview = function(review){
+  //TO DO validate that user can make a review!
+  this.reviews.push(review);
+};
+
 
 mongoose.model('Product', schema);

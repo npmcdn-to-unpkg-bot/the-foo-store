@@ -1,6 +1,13 @@
 <table class='table'>
   <tr ng-repeat='product in products'>
-    <td>{{ product.name }}</td>
+    <td>
+      {{ product.name }}
+      <ul>
+        <li ng-repeat='review in product.reviews'>
+          {{ review.rating }}
+        </li>
+      </ul>
+    </td>
     <td>{{ product.price | currency }}</td>
     <td><button class='btn btn-primary' ng-click='addToCart(product)'>Add to Cart</button></td>
   </tr>

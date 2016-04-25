@@ -47,6 +47,57 @@ describe('Product model', function () {
         expect(product.quantity).to.equal(5);
       });
 
+      describe('product reviews', function(){
+        it('a product has a collection of reviews', function(){
+          expect(product.reviews).to.be.ok;
+        });
+
+        describe('adding a review', function(){
+          var review, user;
+          beforeEach(function(done){
+            return mongoose.model('User').create({
+              email: 'Moe@example.com',
+              password: 'foobar'
+            })
+            .then(function(user){
+              product.reviews.push({
+                rating: 3,
+                user: user
+              });
+            })
+            .then(function(){
+              return product.save()
+            })
+            .then(function(){
+              return Product.findOne({name: 'foo'})
+                .populate('reviews.user');
+            })
+            .then(function(product){
+              review = product.reviews[0];
+              done();
+            }, done);
+          });
+
+          it('can be added', function(){
+            expect(product.reviews.length).to.equal(1);
+          });
+
+          it('a review has a reviewDate', function(){
+            expect(review.reviewDate).to.be.ok;
+          });
+
+          it('a review has a rating', function(){
+            expect(review.rating).to.be.ok;
+          });
+
+          it('a review has a user', function(){
+            expect(review.user.email).to.be.ok;
+          });
+
+        });
+      
+      });
+
     });
 
 

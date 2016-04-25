@@ -40,6 +40,10 @@ var seedUsers = function () {
 
     var users = [
         {
+            email: 'moe@example.com',
+            password: 'password'
+        },
+        {
             email: 'testing@fsa.com',
             password: 'password'
         },
@@ -74,6 +78,8 @@ var seedProducts = function () {
 
 };
 
+var moe, foo;
+
 connectToDb
     .then(function () {
         return wipeCollections();
@@ -81,8 +87,25 @@ connectToDb
     .then(function () {
         return seedUsers();
     })
-    .then(function () {
-        return seedProducts();
+    .then(function (users) {
+      moe = users[0];
+      return seedProducts();
+    })
+    .then(function (products) {
+      //add an order and a review for moe
+      foo = products[0];
+      return Order.getCart(moe)
+        .then(function(cart){
+          cart.lineItems.push({ product: foo, quantity: 3 });
+          return cart.save();
+        })
+        .then(function(cart){
+          return cart.createOrder();
+        })
+        .then(function(){
+          foo.reviews.push({ user: moe, rating: 4 });
+          return foo.save();
+        });
     })
     .then(function () {
         console.log(chalk.green('Seed successful!'));

@@ -8,12 +8,13 @@
           {{ lineItem.product.name }} 
           : 
           {{ lineItem.quantity }} x {{ lineItem.product.price | currency }} per item = {{ lineItem.quantity * lineItem.product.price | currency }}  
-          <ul ng-if='!getReview( lineItem.product )'>
+          <ul>
             <li ng-click='rateProduct(lineItem.product, rating)' ng-repeat='rating in ratingChoices'>
-              {{ rating }}
+              <span class='label label-default' ng-class="{'label-success':  getReview(lineItem.product) && getReview(lineItem.product).rating === rating }">
+                {{ rating }}
+              </span>
             </li>
           </ul>
-          <span class='label label-default'>{{ getReview( lineItem.product ).rating}}</span>
         </li>
       </ul>
       </td>

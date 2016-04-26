@@ -1,10 +1,14 @@
+<div class='alert alert-success' ng-if='message'>
+  {{ message }}
+</div>
+
 <table class='table'>
   <tr ng-repeat='product in products'>
     <td>
       {{ product.name }}
       <ul>
         <li ng-repeat='review in product.reviews'>
-          {{ review.rating }}
+          Rated {{ review.rating }} on {{ review.reviewDate | date }}
         </li>
       </ul>
     </td>

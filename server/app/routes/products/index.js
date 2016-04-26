@@ -51,7 +51,10 @@ router.put('/:id/reviews/:reviewId', ensureAuthenticated, function (req, res, ne
       return product.save();
     })
     .then(function(product){
-      res.send(product);
+      var existing = product.reviews.filter(function(review){
+        return review.user.toString() === req.user.id;
+      });
+      res.send(existing[0]);
     });
 });
 

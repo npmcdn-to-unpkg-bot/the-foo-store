@@ -21,7 +21,7 @@ describe('Review Route', function () {
 		mongoose.connect(dbURI, done);
 	});
 
-  var moe, foo, bar;
+  var moe, foo, bar, review;
 
   beforeEach(function(done){
     require('../seed')()
@@ -42,6 +42,9 @@ describe('Review Route', function () {
     Product.findOne({ name: 'Foo' })
       .then(function(_foo){
         foo = _foo;
+        review = foo.reviews.filter(function(review){
+          return review.user.toString() === moe.id
+        })[0];
         done();
       });
   });
@@ -78,19 +81,20 @@ describe('Review Route', function () {
   });
 
   describe('for a product they have reviewed', function(){
-    it('can not review', function(){
+    it('can update review', function(){
         return request
           .post('/login')
           .send({ email: 'moe@example.com', password: 'password' })
           .then(function(resp){
             expect(resp.status).to.equal(200);
             var cookie = resp.headers['set-cookie'][0];
-            return request.post('/api/products/' + foo._id + '/reviews')
+            return request.put('/api/products/' + foo._id + '/reviews/' + review._id)
               .set('cookie', cookie)
-              .send({ rating: 4 });
+              .send({ rating: 1 });
           })
           .then(function(resp){
-            expect(resp.status).to.equal(404);
+            expect(resp.status).to.equal(200);
+            expect(resp.body.rating).to.equal(1);
           });
     });
   });

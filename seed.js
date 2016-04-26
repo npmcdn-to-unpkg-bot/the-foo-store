@@ -78,7 +78,7 @@ var seedProducts = function () {
 
 };
 
-var moe, foo;
+var moe, foo, bar;
 
 connectToDb
     .then(function () {
@@ -94,9 +94,11 @@ connectToDb
     .then(function (products) {
       //add an order and a review for moe
       foo = products[0];
+      bar = products[1];
       return Order.getCart(moe)
         .then(function(cart){
           cart.lineItems.push({ product: foo, quantity: 3 });
+          cart.lineItems.push({ product: bar, quantity: 6 });
           return cart.save();
         })
         .then(function(cart){
@@ -113,5 +115,5 @@ connectToDb
     })
     .catch(function (err) {
         console.error(err);
-        process.kill(1);
+        //process.kill(1);
     });

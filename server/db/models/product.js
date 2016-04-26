@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 
 var reviewSchema = mongoose.Schema({
   reviewDate: { type: Date, default: Date.now },
-  rating: Number,
+  rating: { type: Number, required: true },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 
 });

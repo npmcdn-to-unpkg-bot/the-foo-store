@@ -11,7 +11,7 @@ describe('Orders Controller', function () {
     it('calls /api/orders', function(){
       var orders = [];
       var $scope = $rootScope.$new();
-      $controller('OrdersController', { $scope: $scope, orders: orders });
+      $controller('OrdersController', { $scope: $scope, orders: orders, reviewMap: {} });
       expect($scope.orders).to.equal(orders);
     });
   });

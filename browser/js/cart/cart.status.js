@@ -1,6 +1,7 @@
 app.directive('cartStatus', function(CartService, $state){
   return {
-    template: '<span class="label label-primary" ng-click="goToCart()" ng-if="hasCart()">{{ itemCount() }}</span>',
+    template: '<li ng-if="hasCart()"><a ui-sref="cart" >Cart ({{ itemCount() }} items)</a></li>',
+    replace: true,
     link: function(scope){
       scope.itemCount = function(){
         return CartService.itemCount();

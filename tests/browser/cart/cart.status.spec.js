@@ -16,8 +16,8 @@ describe('cartStatus directive', function(){
       $scope.$digest();
       html = elem.text();
     });
-    it('is not displayed', function(){
-      expect(html).to.equal('');
+    it('the cart is displayed', function(){
+      expect(html).to.equal('0');
     });
   });
 

@@ -1,11 +1,12 @@
 describe('CartService', function(){
-  var CartService, $q, $rootScope, $httpBackend;
+  var CartService, $q, $rootScope, $httpBackend, AuthService;
   beforeEach(module('FullstackGeneratedApp'));
-  beforeEach(inject(function(_CartService_, _$q_, _$rootScope_, _$httpBackend_){
+  beforeEach(inject(function(_CartService_, _$q_, _$rootScope_, _$httpBackend_, _AuthService_){
     CartService = _CartService_;
     $q = _$q_;
     $rootScope = _$rootScope_;
     $httpBackend = _$httpBackend_;
+    AuthService = _AuthService_;
   }));
   
   describe('before cart is initiated', function(){
@@ -15,9 +16,8 @@ describe('CartService', function(){
     });
 
     it('the item count is zero', function(){
-      expect(cart).not.to.be.ok;
-      expect(CartService.itemCount()).not.to.be.ok;
-      expect(CartService.total()).not.to.be.ok;
+      expect(CartService.itemCount()).to.equal(0);
+      expect(CartService.total()).to.equal(0);
     });
   });
 
@@ -34,7 +34,6 @@ describe('CartService', function(){
       $httpBackend.expectPUT('/api/orders/3', expectedPayload).respond({});
       CartService.checkout();
       var spy = sinon.spy(CartService, 'init');
-      //check that init was called?
       $httpBackend.flush();
       expect(spy.called).to.be.ok;
     });
@@ -50,6 +49,9 @@ describe('CartService', function(){
         
         ]});
       };
+      AuthService.isAuthenticated = function(){
+        return $q.when(true);
+      };
       CartService.init();
       $rootScope.$digest();
       cart = CartService.getCart();
@@ -61,7 +63,7 @@ describe('CartService', function(){
       expect(CartService.total()).to.equal(34);
     });
 
-    describe('adding an product which is not in the cart', function(){
+    describe('adding a product which is not in the cart', function(){
       beforeEach(function(){
         CartService.addProduct({ _id: 6 });
         var expectedPayload = {"_id":7,"lineItems":[{"product":{"_id":3,"price":2},"quantity":5},{"product":{"_id":5,"price":8},"quantity":3},{ quantity: 1, product: {"_id":6}}]};
@@ -76,6 +78,7 @@ describe('CartService', function(){
         cart = CartService.getCart();
         $httpBackend.flush();
       });
+
       it('the cart is updated with a new lineItem', function(){
         expect(CartService.itemCount()).to.equal(9);
         expect(CartService.total()).to.equal(42);

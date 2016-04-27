@@ -13,7 +13,7 @@ app.directive('navbar', function (CartService, $rootScope, AuthService, AUTH_EVE
 
             scope.items = [
                 { label: 'Home', state: 'home' },
-                { label: 'Products', state: 'products', auth: true },
+                { label: 'Products', state: 'products' },
                 { label: 'Orders', state: 'orders', auth: true }
             ];
 

@@ -11,7 +11,7 @@ var ensureAuthenticated = function (req, res, next) {
     }
 };
 
-router.get('/', ensureAuthenticated, function (req, res) {
+router.get('/', function (req, res) {
   Product.find()
     .then(function(products){
       res.send(products);

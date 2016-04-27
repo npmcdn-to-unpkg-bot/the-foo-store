@@ -2,13 +2,21 @@ app.run(function(CartService, $rootScope, AUTH_EVENTS){
   $rootScope.$on(AUTH_EVENTS.loginSuccess, function(){
     CartService.init();
   });
+  $rootScope.$on(AUTH_EVENTS.logoutSuccess, function(){
+    CartService.reset();
+  });
 });
 
-app.factory('CartService', function($http){
+
+app.factory('CartService', function($q, $http, $window, AuthService){
   var _cart;
+  if(!$window.localStorage.getItem('cart')){
+    $window.localStorage.setItem('cart', JSON.stringify({ lineItems: []}));
+  }
+  _cart = JSON.parse($window.localStorage.getItem('cart'));
   return {
     loadCart: function(){
-      return $http.post('/api/orders')
+      return $http.post('/api/orders', JSON.parse($window.localStorage.getItem('cart')))
         .then(function(response){
           return response.data;
         });
@@ -35,6 +43,11 @@ app.factory('CartService', function($http){
           index = idx;
       });
       cartCopy.lineItems.splice(index, 1);
+      if(!AuthService.isAuthenticated()){
+        $window.localStorage.setItem('cart', JSON.stringify(cartCopy))
+          _cart = cartCopy;
+        return $q.when(_cart);
+      }
       return $http.put('/api/orders/' + cartCopy._id, cartCopy)
         .then(function(response){
           _cart = response.data;
@@ -56,6 +69,11 @@ app.factory('CartService', function($http){
         cartCopy.lineItems.push({quantity: 1, product: product});
       else
         products[0].quantity++;
+      if(!AuthService.isAuthenticated()){
+        $window.localStorage.setItem('cart', JSON.stringify(cartCopy))
+          _cart = cartCopy;
+        return $q.when(_cart);
+      }
       return $http.put('/api/orders/' + cartCopy._id, cartCopy)
         .then(function(response){
           _cart = response.data;
@@ -72,9 +90,14 @@ app.factory('CartService', function($http){
     getCart: function(){
       return _cart;
     },
+    reset: function(){
+      $window.localStorage.setItem('cart', JSON.stringify({ lineItems: []}));
+    _cart = JSON.parse($window.localStorage.getItem('cart'));
+    },
     init: function(){
       this.loadCart()
         .then(function(cart){
+          $window.localStorage.removeItem('cart');
           _cart = cart;
         });
     }

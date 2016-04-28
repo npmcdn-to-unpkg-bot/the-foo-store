@@ -10,7 +10,7 @@ app.config(function($stateProvider){
         };
         $scope.checkout = function(){
           CartService.checkout();
-        }
+        };
       }
     });
 

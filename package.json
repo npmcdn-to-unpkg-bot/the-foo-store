@@ -6,7 +6,7 @@
   "scripts": {
     "pretest": "gulp buildJS",
     "test:server": "./node_modules/.bin/mocha tests/server/**/*.js",
-    "test:browser" : "./node_modules/.bin/karma start tests/browser/karma.conf.js",
+    "test:browser": "./node_modules/.bin/karma start tests/browser/karma.conf.js",
     "test": "npm run test:browser && npm run test:server",
     "start": "nodemon --watch server -e js,html server/start.js",
     "postinstall": "gulp build",
@@ -75,6 +75,7 @@
   },
   "devDependencies": {
     "karma-chrome-launcher": "^0.2.3",
+    "ngtoast": "^2.0.1",
     "supertest-as-promised": "^3.1.0"
   }
 }

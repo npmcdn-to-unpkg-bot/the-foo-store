@@ -1,4 +1,4 @@
-app.controller('OrdersController', function($scope, orders, reviewMap, $http){
+app.controller('OrdersController', function($scope, orders, reviewMap, $http, toastr){
   $scope.orders = orders;
   $scope.getReview = function(product){
     return reviewMap[product._id];
@@ -15,6 +15,7 @@ app.controller('OrdersController', function($scope, orders, reviewMap, $http){
         })
         .then(function(review){
           reviewMap[product._id] = review;
+          toastr.success('Thanks for your review');
         });
     }
     else {
@@ -23,6 +24,7 @@ app.controller('OrdersController', function($scope, orders, reviewMap, $http){
           return response.data; 
         })
         .then(function(review){
+          toastr.success('Thanks for your review');
           reviewMap[product._id] = review;
         });
     }

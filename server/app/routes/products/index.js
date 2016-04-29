@@ -11,11 +11,11 @@ var ensureAuthenticated = function (req, res, next) {
     }
 };
 
-router.get('/', function (req, res) {
+router.get('/', function (req, res, next) {
   Product.find()
     .then(function(products){
       res.send(products);
-    });
+    }, next);
 });
 
 router.post('/', ensureAuthenticated, function (req, res, next) {
@@ -25,10 +25,10 @@ router.post('/', ensureAuthenticated, function (req, res, next) {
   })
   .then(function(product){
     res.send(product);
-  });
+  }, next);
 });
 
-router.post('/:id/reviews/', ensureAuthenticated, function (req, res, next) {
+var addOrUpdateReview = function(req, res, next){
   var review = {
     user: req.user,
     rating: req.body.rating,
@@ -38,17 +38,9 @@ router.post('/:id/reviews/', ensureAuthenticated, function (req, res, next) {
     .then(function(){
       res.send(review);
     }, next);
-});
+};
 
-router.put('/:id/reviews/:reviewId', ensureAuthenticated, function (req, res, next) {
-  var review = {
-    user: req.user,
-    rating: req.body.rating,
-    _id: req.params.reviewId
-  };
-  Product.addOrUpdateReview(req.params.id, review)
-    .then(function(){
-      res.send(review);
-    }, next);
-});
+router.post('/:id/reviews/', ensureAuthenticated,  addOrUpdateReview);
+
+router.put('/:id/reviews/:reviewId', ensureAuthenticated, addOrUpdateReview); 
 

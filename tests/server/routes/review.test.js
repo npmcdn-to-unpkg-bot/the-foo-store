@@ -9,9 +9,8 @@ var expect = require('chai').expect;
 var dbURI = 'mongodb://localhost:27017/testingDB';
 var clearDB = require('mocha-mongoose')(dbURI);
 
-var supertest = require('supertest');
 var app = require('../../../server/app');
-var request = require('supertest-as-promised')(app);
+var agent = require('supertest-as-promised').agent(app);
 
 
 describe('Review Route', function () {
@@ -43,7 +42,7 @@ describe('Review Route', function () {
       .then(function(_foo){
         foo = _foo;
         review = foo.reviews.filter(function(review){
-          return review.user.toString() === moe.id
+          return review.user.toString() === moe.id;
         })[0];
         done();
       });
@@ -63,40 +62,44 @@ describe('Review Route', function () {
 
   describe('for a product they have not reviewed', function(){
     it('can review', function(){
-        return request
+        return agent 
           .post('/login')
           .send({ email: 'moe@example.com', password: 'password' })
+          .expect(200)
           .then(function(resp){
-            expect(resp.status).to.equal(200);
-            var cookie = resp.headers['set-cookie'][0];
-            return request.post('/api/products/' + bar._id + '/reviews')
-              .set('cookie', cookie)
-              .send({ rating: 4 });
+            return agent.post('/api/products/' + bar._id + '/reviews').send({ rating: 4 });
           })
           .then(function(resp){
-            expect(resp.status).to.equal(200);
             expect(resp.body.rating).to.equal(4);
-          })
+          });
     });
   });
 
   describe('for a product they have reviewed', function(){
     it('can update review', function(){
-        return request
+        return agent 
           .post('/login')
           .send({ email: 'moe@example.com', password: 'password' })
+          .expect(200)
           .then(function(resp){
-            expect(resp.status).to.equal(200);
-            var cookie = resp.headers['set-cookie'][0];
-            return request.put('/api/products/' + foo._id + '/reviews/' + review._id)
-              .set('cookie', cookie)
+            return agent.put('/api/products/' + foo._id + '/reviews/' + review._id)
               .send({ rating: 1 });
           })
           .then(function(resp){
-            expect(resp.status).to.equal(200);
             expect(resp.body.rating).to.equal(1);
           });
     });
+    it.only('can delete the review', function(){
+        return agent 
+          .post('/login')
+          .send({ email: 'moe@example.com', password: 'password' })
+          .expect(200)
+          .then(function(resp){
+            return agent.delete('/api/products/' + foo._id + '/reviews/' + review._id);
+          })
+          .then(function(resp){
+            expect(resp.status).to.equal(204);
+          });
+    });
   });
-
 });

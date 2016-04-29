@@ -22,6 +22,22 @@ schema.statics.addOrUpdateReview = function(productId, review){
     });
 };
 
+schema.statics.deleteReview = function(productId, reviewId, user){
+  return this.findById(productId)
+    .then(function(product){
+        var index = -1;
+        product.reviews.forEach(function(r, idx){
+          if(reviewId == r.id && r.user == user.id)
+            index = idx;
+        });
+        if(index !== -1){
+          product.reviews.splice(index, 1);
+          return product.save();
+        }
+        throw 'review not found for user and id';
+    });
+};
+
 
 schema.methods.addOrUpdateReview = function(review){
   if(review._id)

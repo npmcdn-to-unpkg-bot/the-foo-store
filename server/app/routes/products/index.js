@@ -44,3 +44,11 @@ router.post('/:id/reviews/', ensureAuthenticated,  addOrUpdateReview);
 
 router.put('/:id/reviews/:reviewId', ensureAuthenticated, addOrUpdateReview); 
 
+router.delete('/:id/reviews/:reviewId', ensureAuthenticated, function(req, res, next){
+  Product.deleteReview(req.params.id, req.params.reviewId, req.user)
+    .then(function(){
+      res.sendStatus(204);
+    }, next);
+
+}); 
+

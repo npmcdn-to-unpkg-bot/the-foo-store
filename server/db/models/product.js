@@ -48,17 +48,29 @@ schema.methods.addOrUpdateReview = function(review){
 
 schema.methods.updateReview = function(review){
   var _review = this.reviews.filter(function(r){
-    return review._id == r._id && r.user == review.user.id;
+    return review._id == r._id && r.user.toString() == review.user;
   })[0];
   if(!_review)
     throw 'review not found for user and id';
   _review.rating = review.rating;
-  return this.save();
+  return this.save()
+    .then(function(product){
+      var _review = product.reviews.filter(function(r){
+        return r.user == review.user.toString();
+      })[0];
+      return _review;
+    });
 };
 
 schema.methods.addReview = function(review){
   this.reviews.push(review);
-  return this.save();
+  return this.save()
+    .then(function(product){
+      var _review = product.reviews.filter(function(r){
+        return r.user == review.user;
+      })[0];
+      return _review;
+    });
 };
 
 

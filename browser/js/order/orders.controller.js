@@ -6,6 +6,16 @@ app.controller('OrdersController', function($scope, orders, reviewMap, $http, to
 
   $scope.ratingChoices = [1, 2, 3, 4, 5];
 
+  $scope.deleteReview = function(product){
+      var review = reviewMap[product._id];
+      $http.delete('/api/products/' + product._id + '/reviews/' + review._id)
+        .then(function(){
+          toastr.warning('Your review has been removed.');
+          delete reviewMap[product._id];
+        });
+  
+  };
+
   $scope.rateProduct = function(product, rating){
     if(reviewMap[product._id]){
       var review = reviewMap[product._id];

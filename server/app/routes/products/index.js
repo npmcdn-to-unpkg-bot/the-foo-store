@@ -30,12 +30,13 @@ router.post('/', ensureAuthenticated, function (req, res, next) {
 
 var addOrUpdateReview = function(req, res, next){
   var review = {
-    user: req.user,
-    rating: req.body.rating,
-    _id: req.params.reviewId
+    user: req.user._id,
+    rating: req.body.rating
   };
+  if(req.params.reviewId)
+    review._id = req.params.reviewId;
   Product.addOrUpdateReview(req.params.id, review)
-    .then(function(){
+    .then(function(review){
       res.send(review);
     }, next);
 };

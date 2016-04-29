@@ -71,6 +71,7 @@ describe('Review Route', function () {
           })
           .then(function(resp){
             expect(resp.body.rating).to.equal(4);
+            expect(resp.body._id).to.be.ok;
           });
     });
   });
@@ -87,9 +88,10 @@ describe('Review Route', function () {
           })
           .then(function(resp){
             expect(resp.body.rating).to.equal(1);
+            expect(resp.body._id).to.be.ok;
           });
     });
-    it.only('can delete the review', function(){
+    it('can delete the review', function(){
         return agent 
           .post('/login')
           .send({ email: 'moe@example.com', password: 'password' })

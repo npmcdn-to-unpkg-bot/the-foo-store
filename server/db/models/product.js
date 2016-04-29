@@ -9,7 +9,7 @@ var reviewSchema = mongoose.Schema({
 });
 
 var schema = new mongoose.Schema({
-  name: String,
+  name: { type: String, unique: true },
   quantity: { type: Number, default: 5 },
   price: { type: Number, default: 0 },
   reviews: [ reviewSchema ]

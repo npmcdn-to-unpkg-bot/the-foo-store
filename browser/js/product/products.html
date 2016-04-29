@@ -2,17 +2,37 @@
   {{ message }}
 </div>
 
-<table class='table'>
-  <tr ng-repeat='product in products'>
-    <td>
-      {{ product.name }}
-      <ul>
-        <li ng-repeat='review in product.reviews'>
-          Rated {{ review.rating }} on {{ review.reviewDate | date }}
-        </li>
-      </ul>
-    </td>
-    <td>{{ product.price | currency }}</td>
-    <td><button class='btn btn-primary' ng-click='addToCart(product)'>Add to Cart</button></td>
-  </tr>
-</table>
+  <div class='row'>
+    <div class='col-sm-8'>
+      <table class='table'>
+        <tr ng-repeat='product in products'>
+          <td>
+            {{ product.name }}
+            <ul>
+              <li ng-repeat='review in product.reviews'>
+                Rated {{ review.rating }} on {{ review.reviewDate | date }}
+              </li>
+            </ul>
+          </td>
+          <td>{{ product.price | currency }}</td>
+          <td><button class='btn btn-primary' ng-click='addToCart(product)'>Add to Cart</button></td>
+      </tr>
+    </table>
+  </div>
+  <div class='col-sm-4'>
+  <div ng-if='isAdmin()'>
+    <form style='margin-bottom: 10px' ng-submit='createProduct()' name='insertForm'>
+      <div class='form-group'>
+        <label>Product Name</label>
+        <input class='form-control' ng-model='newProduct.name' required/>
+      </div>
+      <div class='form-group'>
+        <label>Price</label>
+        <input class='form-control' type='number' required ng-model='newProduct.price' />
+      </div>
+      <button ng-disabled='insertForm.$invalid' type='submit' class='btn btn-primary'>Save</button>
+      
+    </form>
+  </div>
+</div>
+

@@ -1,4 +1,18 @@
-app.controller('ProductsCtrl', function($scope, ProductFactory, CartService, $http, toastr){
+app.controller('ProductsCtrl', function($scope, ProductFactory, CartService, $http, toastr, AuthService, Session){
+  $scope.newProduct = {};
+
+  $scope.createProduct = function(){
+    $http.post('/api/products', $scope.newProduct)
+      .then(function(response){
+        $scope.products.push(response.data);
+        $scope.newProduct = {};
+      });
+  };
+
+  $scope.isAdmin = function(){
+    //why does this return Session.user; //cause problems?
+    return Session.user && Session.user.isAdmin; 
+  };
 
   $scope.addToCart = function(product){
     CartService.addProduct(product)

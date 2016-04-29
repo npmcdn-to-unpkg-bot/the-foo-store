@@ -18,6 +18,16 @@ router.get('/', function (req, res) {
     });
 });
 
+router.post('/', ensureAuthenticated, function (req, res, next) {
+  Product.create({
+    name: req.body.name,
+    price: req.body.price
+  })
+  .then(function(product){
+    res.send(product);
+  });
+});
+
 router.post('/:id/reviews/', ensureAuthenticated, function (req, res, next) {
   Product.findById(req.params.id)
     .then(function(product){

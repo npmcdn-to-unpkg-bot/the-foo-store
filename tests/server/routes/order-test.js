@@ -11,7 +11,7 @@ var clearDB = require('mocha-mongoose')(dbURI);
 
 var supertest = require('supertest');
 var app = require('../../../server/app');
-var request = require('supertest-as-promised')(app);
+var agent = require('supertest-as-promised').agent(app);
 
 
 describe('Orders Route', function () {
@@ -55,75 +55,46 @@ describe('Orders Route', function () {
     describe('creating a cart and adding items and checking out', function(){
 
       it('will create an order', function () {
-        var cart, cookie;
-        return request
+        var cart;
+        return agent 
           .post('/login')
           .send(userInfo)
+          .expect(200)
           .then(function(resp){
-            cookie = resp.headers['set-cookie'][0];
-            return request.post('/api/orders')
-              .set('cookie', cookie);
+            return agent.post('/api/orders')
+              .send({
+                lineItems: [
+                  { product: product, quantity: 3 }
+                ]
+              });
           })
           .then(function (response) {
             expect(response.status).to.equal(200);
-            expect(response.body.lineItems).to.eql([]);
+            expect(response.body.lineItems.length).to.equal(1);
             expect(response.body.orderDate).not.to.be.ok;
             return response.body;
           })
           .then(function (cart) {
-            cart.lineItems.push({ product: product, quantity: 3 });
-            return request.put('/api/orders/' + cart._id)
-              .set('cookie', cookie)
+            cart.lineItems[0].quantity = 2;
+            return agent.put('/api/orders/' + cart._id)
               .send(cart);
           })
           .then(function (resp) {
             cart = resp.body;
-            cart.lineItems.push({ product: product, quantity: 3 });
+            expect(cart.lineItems[0].quantity).to.equal(2);
+            cart.lineItems.push({ product: product, quantity: 3 });//this should be ignored
             cart.status = 'ORDER';
-            return request.put('/api/orders/' + cart._id)
-              .set('cookie', cookie)
+            return agent.put('/api/orders/' + cart._id)
               .send(cart);
           })
           .then(function (resp) {
             expect(resp.body.orderDate).to.be.ok;
-            expect(resp.body.lineItems[0].quantity).to.equal(3);
-            return request.get('/api/orders/')
-              .set('cookie', cookie)
+            expect(resp.body.lineItems[0].quantity).to.equal(2);
+            return agent.get('/api/orders/');
           })
           .then(function (resp) {
             expect(resp.body.length).to.equal(1);
             expect(resp.body[0].status).to.equal('ORDER'); 
-          });
-      });
-    });
-
-    describe('creating a cart and adding items', function(){
-
-      it('return a cart', function () {
-        var cart, cookie;
-        return request
-          .post('/login')
-          .send(userInfo)
-          .then(function(resp){
-            cookie = resp.headers['set-cookie'][0];
-            return request.post('/api/orders')
-              .set('cookie', cookie);
-          })
-          .then(function (response) {
-            expect(response.status).to.equal(200);
-            expect(response.body.lineItems).to.eql([]);
-            return response.body;
-          })
-          .then(function (cart) {
-            cart.lineItems.push({ product: product, quantity: 3 });
-            return request.put('/api/orders/' + cart._id)
-              .set('cookie', cookie)
-              .send(cart);
-          })
-          .then(function (resp) {
-            expect(resp.status).to.equal(200);
-            expect(resp.body.lineItems.length).to.equal(1);
-            expect(resp.body.lineItems[0].quantity).to.equal(3);
           });
       });
     });

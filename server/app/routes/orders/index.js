@@ -1,16 +1,9 @@
 'use strict';
 var router = require('express').Router();
 module.exports = router;
-var _ = require('lodash');
 var Order = require('mongoose').model('Order');
 
-var ensureAuthenticated = function (req, res, next) {
-    if (req.isAuthenticated()) {
-        next();
-    } else {
-        res.status(401).end();
-    }
-};
+var ensureAuthenticated = require('../../configure/auth-middleware').ensureAuthenticated;
 
 router.get('/', ensureAuthenticated, function (req, res) {
   Order.find({ user: req.user._id, status: 'ORDER' })
@@ -20,39 +13,21 @@ router.get('/', ensureAuthenticated, function (req, res) {
     });
 });
 
-router.post('/', ensureAuthenticated, function (req, res) {
+router.post('/', ensureAuthenticated, function (req, res, next) {
   Order.getCart(req.user)
     .then(function(cart){
-      if(!req.body.lineItems)
+      if(!req.body.lineItems)//this would be from an anonymous cart
         return cart;
-      req.body.lineItems.forEach(function(lineItem){
-        var existing = cart.lineItems.filter(function(_lineItem){
-          return _lineItem.product.id === lineItem.product.id;
-        });
-        if(existing.length)
-          existing.quantity += lineItem.quantity;
-        else
-          cart.lineItems.push(lineItem);
-      });
-      return cart.save()
-        .then(function(){
-          return Order.getCart(req.user);
-        });
+      return cart.merge(req.body.lineItems, req.user);
     })
     .then(function(cart){
       res.send(cart);
-    });
+    }, next);
 });
 
 router.put('/:id', ensureAuthenticated, function (req, res, next) {
-  Order.getCart(req.user)
+  return Order.updateCart(req.body, req.user)
     .then(function(cart){
-      if(cart.status === 'CART' && req.body.status === 'ORDER')
-        return cart.createOrder();
-      cart.lineItems = req.body.lineItems;
-      return cart.save();
-    })
-    .then(function(cart){
-      return res.send(cart);
+      res.send(cart);
     }, next);
 });

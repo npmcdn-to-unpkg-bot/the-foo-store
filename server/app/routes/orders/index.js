@@ -5,12 +5,11 @@ var Order = require('mongoose').model('Order');
 
 var ensureAuthenticated = require('../../configure/auth-middleware').ensureAuthenticated;
 
-router.get('/', ensureAuthenticated, function (req, res) {
-  Order.find({ user: req.user._id, status: 'ORDER' })
-    .populate('lineItems.product')
+router.get('/', ensureAuthenticated, function (req, res, next) {
+  Order.getOrdersForUser(req.user)
     .then(function(orders){
       res.send(orders);
-    });
+    }, next);
 });
 
 router.post('/', ensureAuthenticated, function (req, res, next) {

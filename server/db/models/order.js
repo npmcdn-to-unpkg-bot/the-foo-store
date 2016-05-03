@@ -35,6 +35,14 @@ function changeStatusToOrder(cart, status){
   return cart.status === 'CART' && status === 'ORDER';
 };
 
+schema.statics.getOrdersForUser = function(user){
+  var qry = { status: 'ORDER' };
+  if(!user.isAdmin)
+    qry.user = user._id;
+  return this.find(qry)
+    .populate('lineItems.product');
+};
+
 schema.statics.updateCart = function(_cart, user){
   var lineItems = _cart.lineItems;
   return this.getCart(user)
@@ -54,7 +62,6 @@ schema.statics.getCart = function(user){
       if(cart)
         return cart;
       return that.create({ user: user, status: 'CART'}); 
-    
     });
 };
 

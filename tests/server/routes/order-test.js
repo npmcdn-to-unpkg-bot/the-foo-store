@@ -25,6 +25,28 @@ describe('Orders Route', function () {
 		clearDB(done);
 	});
 
+  describe('Admin functionality', function(){
+    beforeEach(function(done){
+      require('../seed')()
+        .then(function(){
+          done();
+        });
+    });
+    it('can mark an order as shipped', function(){
+        return agent 
+          .post('/login')
+          .send({ email: 'obama@gmail.com', password: 'potus' })
+          .expect(200)
+          .then(function(){
+            return agent.get('/api/orders');
+          })
+          .then(function(response){
+            expect(response.body.length).to.equal(1);
+          });
+    });
+  
+  });
+
 	describe('As an authorized user', function () {
     var product;
 

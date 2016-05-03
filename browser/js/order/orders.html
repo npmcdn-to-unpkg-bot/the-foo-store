@@ -1,7 +1,10 @@
 <table class='table'>
   <tr ng-repeat='order in orders'>
-    <td>{{ order._id }}</td>
+    <td>{{ order.user.email }}</td>
     <td>{{ order.orderDate | date }}</td>
+    <td ng-if='isAdmin() && order.status !== "SHIPPED"'>
+      <button ng-click='createShipment(order)' class='btn btn-primary'>Mark as Shipped</button>
+    </td>
     <td>
       <ul class='list-group'>
         <li ng-repeat='lineItem in order.lineItems' class='list-group-item'>

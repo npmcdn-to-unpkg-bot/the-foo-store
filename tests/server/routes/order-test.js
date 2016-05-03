@@ -41,7 +41,16 @@ describe('Orders Route', function () {
             return agent.get('/api/orders');
           })
           .then(function(response){
-            expect(response.body.length).to.equal(1);
+            var orderId = response.body[0]._id;
+            return agent.put('/api/orders/' + orderId, {
+              status: 'SHIPPED'
+            });
+          })
+          .then(function(response){
+            return agent.get('/api/orders');
+          })
+          .then(function(response){
+            expect(response.body.length).to.equal(0);
           });
     });
   

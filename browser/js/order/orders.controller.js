@@ -1,7 +1,19 @@
-app.controller('OrdersController', function($scope, orders, reviewMap, $http, toastr){
+app.controller('OrdersController', function($scope, orders, reviewMap, $http, toastr, Session){
   $scope.orders = orders;
   $scope.getReview = function(product){
     return reviewMap[product._id];
+  };
+
+  $scope.isAdmin = function(){
+    return Session.user && Session.user.isAdmin; 
+  };
+
+  $scope.createShipment = function(order){
+    $http.put('/api/orders/' + order._id, { status: 'SHIPPED' })
+      .then(function(){
+        toastr.success('Order has been shipped.');
+        order.status = 'SHIPPED';
+      });
   };
 
   $scope.ratingChoices = [1, 2, 3, 4, 5];

@@ -10,7 +10,6 @@ app.controller('ProductsCtrl', function($scope, ProductFactory, CartService, $ht
   };
 
   $scope.isAdmin = function(){
-    //why does this return Session.user; //cause problems?
     return Session.user && Session.user.isAdmin; 
   };
 

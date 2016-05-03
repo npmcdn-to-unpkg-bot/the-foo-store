@@ -28,7 +28,6 @@ schema.methods.merge = function(lineItems, user){
     .then(function(){
       return mongoose.model('Order').getCart(user);
     });
-
 };
 
 function changeStatusToOrder(cart, status){
@@ -36,11 +35,26 @@ function changeStatusToOrder(cart, status){
 };
 
 schema.statics.getOrdersForUser = function(user){
-  var qry = { status: 'ORDER' };
+  var qry = { status: { $in: ['ORDER', 'SHIPPED'] } };
   if(!user.isAdmin)
     qry.user = user._id;
   return this.find(qry)
-    .populate('lineItems.product');
+    .populate(['lineItems.product', 'user']);
+};
+
+schema.statics.update = function(id, body, user){
+  var that = this;
+  return this.findById(id)
+    .then(function(order){
+      if(order.status === 'ORDER' && !user.isAdmin)
+        throw 'orders can not be updated by non admins';
+      if(order.status === 'ORDER' && user.isAdmin){
+        order.status = body.status; 
+        return order.save();
+      }
+      return that.updateCart(body, user); 
+    });
+
 };
 
 schema.statics.updateCart = function(_cart, user){
@@ -54,7 +68,7 @@ schema.statics.updateCart = function(_cart, user){
     });
 };
 
-schema.statics.getCart = function(user){
+schema.statics.getCart = function(user, _cart){
   var that = this;
   return this.findOne({ user: user, status: 'CART' })
     .populate('lineItems.product')
@@ -62,6 +76,12 @@ schema.statics.getCart = function(user){
       if(cart)
         return cart;
       return that.create({ user: user, status: 'CART'}); 
+    })
+    .then(function(cart){
+      var lineItems = _cart && _cart.lineItems;
+      if(!lineItems)//this would be from an anonymous cart
+        return cart;
+      return cart.merge(lineItems, user);
     });
 };
 

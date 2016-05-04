@@ -13,6 +13,20 @@ var schema = new mongoose.Schema({
   quantity: { type: Number, default: 5 },
   price: { type: Number, default: 0 },
   reviews: [ reviewSchema ]
+}, {
+  toObject: {
+    virtuals: true
+  },
+  toJSON: {
+    virtuals: true
+  }
+});
+
+schema.virtual('rating').get(function(){
+  return this.reviews.reduce(function(sum, review){
+    sum += review.rating;
+    return sum;
+  }, 0)/this.reviews.length;
 });
 
 schema.statics.addOrUpdateReview = function(productId, review){

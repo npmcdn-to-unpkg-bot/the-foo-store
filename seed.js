@@ -36,79 +36,12 @@ var wipeCollections = function () {
     ]);
 };
 
-var seedUsers = function () {
-
-    var users = [
-        {
-            email: 'moe@example.com',
-            password: 'password',
-            isAdmin: true
-        },
-        {
-            email: 'testing@fsa.com',
-            password: 'password'
-        },
-        {
-            email: 'obama@gmail.com',
-            password: 'potus'
-        }
-    ];
-
-    return User.create(users);
-
-};
-
-var seedProducts = function () {
-
-    var products = [
-        {
-          name: 'Foo',
-          price: 5
-        },
-        {
-          name: 'Bar',
-          price: 9
-        },
-        {
-          name: 'Buzz',
-          price: 8
-        }
-    ];
-
-    return Product.create(products);
-
-};
-
-var moe, foo, bar;
-
 connectToDb
     .then(function () {
-        return wipeCollections();
+      return wipeCollections(); 
     })
     .then(function () {
-        return seedUsers();
-    })
-    .then(function (users) {
-      moe = users[0];
-      return seedProducts();
-    })
-    .then(function (products) {
-      //add an order and a review for moe
-      foo = products[0];
-      bar = products[1];
-      return Order.getCart(moe)
-        .then(function(cart){
-          cart.lineItems.push({ product: foo, quantity: 3 });
-          cart.lineItems.push({ product: bar, quantity: 6 });
-          return cart.save();
-        })
-        .then(function(cart){
-          return cart.createOrder();
-        })
-        .then(function(){
-          foo.reviews.push({ user: moe, rating: 4 });
-          return foo.save();
-        });
+      return require('./tests/server/seed')();
     })
     .then(function () {
         console.log(chalk.green('Seed successful!'));
@@ -116,5 +49,4 @@ connectToDb
     })
     .catch(function (err) {
         console.error(err);
-        //process.kill(1);
     });

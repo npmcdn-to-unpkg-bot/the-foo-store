@@ -14,6 +14,10 @@ module.exports = function(){
               password: 'password'
           },
           {
+              email: 'larry@example.com',
+              password: 'password'
+          },
+          {
               email: 'testing@fsa.com',
               password: 'password'
           },
@@ -49,16 +53,17 @@ module.exports = function(){
 
   };
 
-  var moe, foo, bar;
+  var moe, foo, bar, larry;
 
 
       return seedUsers()
       .then(function (users) {
         moe = users[0];
+        larry = users[1];
+        console.log(larry);
         return seedProducts();
       })
       .then(function (products) {
-        //add an order and a review for moe
         foo = products[0];
         bar = products[1];
         return Order.getCart(moe)
@@ -72,6 +77,21 @@ module.exports = function(){
           })
           .then(function(){
             foo.reviews.push({ user: moe, rating: 4 });
+            return foo.save();
+          });
+      })
+      .then(function () {
+        return Order.getCart(larry)
+          .then(function(cart){
+            cart.lineItems.push({ product: foo, quantity: 3 });
+            cart.lineItems.push({ product: bar, quantity: 6 });
+            return cart.save();
+          })
+          .then(function(cart){
+            return cart.createOrder();
+          })
+          .then(function(){
+            foo.reviews.push({ user: larry, rating: 2 });
             return foo.save();
           });
       });

@@ -1,4 +1,4 @@
-app.directive('navbar', function (CartService, $rootScope, AuthService, AUTH_EVENTS, $state) {
+app.directive('navbar', function (CartService, $rootScope, AuthService, AUTH_EVENTS, $state, Session) {
 
     return {
         restrict: 'E',
@@ -6,6 +6,14 @@ app.directive('navbar', function (CartService, $rootScope, AuthService, AUTH_EVE
         },
         templateUrl: 'js/common/directives/navbar/navbar.html',
         link: function (scope) {
+            scope.showItem = function(item){
+              if(!item.auth)
+                return true;
+              if(!item.admin)
+                return scope.isLoggedIn();
+              else
+                return Session.user && Session.user.isAdmin;
+            };
             scope.getItemCount = function(){
               var count = CartService.itemCount();
               return count;
@@ -14,7 +22,8 @@ app.directive('navbar', function (CartService, $rootScope, AuthService, AUTH_EVE
             scope.items = [
                 { label: 'The Foo Store', state: 'home' },
                 { label: 'Products', state: 'products' },
-                { label: 'Orders', state: 'orders', auth: true }
+                { label: 'Orders', state: 'orders', auth: true },
+                { label: 'Users', state: 'users', auth: true, admin: true }
             ];
 
             scope.user = null;

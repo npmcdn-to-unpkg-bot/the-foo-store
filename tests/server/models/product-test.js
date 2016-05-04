@@ -67,7 +67,7 @@ describe('Product model', function () {
               return product.addReview(review);
             })
             .then(function(){
-              return product.save()
+              return product.save();
             })
             .then(function(){
               return Product.findOne({name: 'foo'})
@@ -81,6 +81,10 @@ describe('Product model', function () {
 
           it('can be added', function(){
             expect(product.reviews.length).to.equal(1);
+          });
+
+          it('product has a rating', function(){
+            expect(product.rating).to.equal(3);
           });
 
           it('a review has a reviewDate', function(){

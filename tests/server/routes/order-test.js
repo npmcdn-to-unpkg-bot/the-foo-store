@@ -50,7 +50,7 @@ describe('Orders Route', function () {
             return agent.get('/api/orders');
           })
           .then(function(response){
-            expect(response.body.length).to.equal(0);
+            expect(response.body.length).to.equal(1);
           });
     });
   

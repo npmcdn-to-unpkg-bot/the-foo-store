@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 require('../../../server/db/models');
 var User = mongoose.model('User');
 var Product = mongoose.model('Product');
+var Promise = require('bluebird');
 
 var expect = require('chai').expect;
 
@@ -87,10 +88,13 @@ describe('Orders Route', function () {
 
       it('will create an order', function () {
         var cart;
-        return agent 
-          .post('/login')
-          .send(userInfo)
-          .expect(200)
+        return Promise.bind({})
+          .then(function(){
+            return agent 
+            .post('/login')
+            .send(userInfo)
+            .expect(200);
+          })
           .then(function(resp){
             return agent.post('/api/orders')
               .send({
@@ -110,9 +114,32 @@ describe('Orders Route', function () {
             return agent.put('/api/orders/' + cart._id)
               .send(cart);
           })
-          .then(function (resp) {
-            cart = resp.body;
+          .then(function (response) {
+            var cart = response.body;
             expect(cart.lineItems[0].quantity).to.equal(2);
+            var address = {
+              street: '1313 Mockingbird Lane',
+              city: 'New York',
+              state: 'NY',
+              zip: '10025'
+            };
+            cart.address = address;
+            return agent.put('/api/orders/' + cart._id)
+              .send(cart);
+          })
+          .then(function(resp){
+            cart = resp.body;
+            expect(cart.address).to.be.ok;
+            cart.creditCard = {
+              ccNumber: '12345',
+              ccV: '12'
+            };
+            return agent.put('/api/orders/' + cart._id)
+              .send(cart);
+          })
+          .then(function (resp) {
+            var cart = resp.body;
+            expect(cart.creditCard).to.be.ok;
             cart.lineItems.push({ product: product, quantity: 3 });//this should be ignored
             cart.status = 'ORDER';
             return agent.put('/api/orders/' + cart._id)

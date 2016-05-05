@@ -1,6 +1,18 @@
 'use strict';
 var mongoose = require('mongoose');
 
+var addressSchema = mongoose.Schema({
+  street: String,
+  city: String,
+  state: String,
+  zipcode: String
+});
+
+var creditCardSchema = mongoose.Schema({
+  ccNumber: String,
+  ccv: String
+});
+
 var lineItemSchema = mongoose.Schema({
   product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product'},
   quantity: Number
@@ -10,7 +22,9 @@ var schema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   lineItems: [ lineItemSchema ],
   status: { type: String, default: 'CART' },
-  orderDate: Date
+  orderDate: Date,
+  address: addressSchema,
+  creditCard: creditCardSchema
 });
 
 schema.methods.merge = function(lineItems, user){
@@ -59,11 +73,15 @@ schema.statics.update = function(id, body, user){
 
 schema.statics.updateCart = function(_cart, user){
   var lineItems = _cart.lineItems;
+  var address = _cart.address;
+  var creditCard = _cart.creditCard;
   return this.getCart(user)
     .then(function(cart){
       if(changeStatusToOrder(cart, _cart.status))
         return cart.createOrder();
       cart.lineItems = lineItems;
+      cart.address = address;
+      cart.creditCard = creditCard;
       return cart.save();
     });
 };
